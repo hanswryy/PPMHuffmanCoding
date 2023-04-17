@@ -1,5 +1,4 @@
-#include <stdlib.h>
-#include <stdio.h>
+#include "PPMReader.h"
 
 void readPPMHeader(FILE *file, unsigned char *header){
     fread(header, 15, 1, file);
@@ -25,32 +24,25 @@ void writePPM(FILE *file, unsigned char *header, unsigned char *image, int size)
     fwrite(image, size, 1, file);
 }
 
-int main(void)
+void readImage(unsigned char **header, unsigned char **image)
 {
 	FILE *read, *write1;
-	unsigned char header[15], *image;
   	int i, j;
 	read = fopen("first.ppm", "rb"); /* b - binary mode */
-    readPPMHeader(read, header);
-    if (header[0]!='P' || header[1]!='6'){
+    readPPMHeader(read, *header);
+    if (*header[0]!='P' || *header[1]!='6'){
         printf("Wrong hahah");
-        return 0;
+        return;
     }
     // get dimenstion
     int width, height, clrs, pos = 3;
-    width = getDimension(header, pos);
+    width = getDimension(*header, pos);
     pos++;
-    height = getDimension(header, pos);
+    height = getDimension(*header, pos);
     printf("Width : %d, Height : %d", width, height);
-    image = new unsigned char [width * height * 3];
-    readPPMImage(read, image, width*height*3);
+    *image = new unsigned char [width * height * 3];
+    readPPMImage(read, *image, width*height*3);
     // Validate the pixel intensities (rgb) of the first pixel. (255 29 29)
-    printf("\n");
-    for (i=0;i<3;i++){
-    	printf("%d", *image);
-    	*image++;
-    }
-	writePPM(write1, header, image, width * height * 3);
+    
     fclose(read);
-    return 0;
 }
