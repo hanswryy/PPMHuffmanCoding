@@ -2,7 +2,6 @@
 #define PPMReader_h
 
 #include <stdlib.h>
-#include <string.h>
 #include <stdio.h>
 
 typedef struct tHuffmanNode *HuffmanNode;
@@ -12,8 +11,6 @@ typedef struct tHuffmanNode {
     HuffmanNode left;
     HuffmanNode right;
 } Huffman;
-
-
 
 void readPPMHeader(FILE *file, unsigned char *header);
 
@@ -25,6 +22,9 @@ void writePPM(FILE *file, unsigned char *header, unsigned char *image, int size)
 
 void readImage(unsigned char header[], unsigned char * &image);
 
-void hitungFreq(unsigned char image[][3], Huffman *data, int imageSize);
+void countPixelFrequency(unsigned char* image, int width, int height, HuffmanNode* frequencyTable);
+
+void printPixelFrequency(HuffmanNode frequencyTable);
+
 #endif
 
