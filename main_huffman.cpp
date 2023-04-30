@@ -1,4 +1,5 @@
 #include "PPMReader.h"
+#include "huffman.h"
 #include <stdio.h>
 
 int main() {
@@ -19,7 +20,11 @@ int main() {
         return 1;
     }
 	countPixelFrequency(image, width, height, freq, data);
-	printPixelFrequency(freq, data);
+
+	printPixelFrequency(freq, data, width*height);
+
+    HuffmanCodes(data, freq, width*height);
+
 	free(image);
     free(freq);
     free(data);

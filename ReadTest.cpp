@@ -29,7 +29,7 @@ void readImage(unsigned char header[], unsigned char* &image) // perubahan pada 
 {
 	FILE *read, *write1;
   	int i, j;
-	read = fopen("first.ppm", "rb"); /* b - binary mode */
+	read = fopen("FLAG.ppm", "rb"); /* b - binary mode */
 	
     readPPMHeader(read, header);
     if (header[0]!='P' || header[1]!='6'){
@@ -52,7 +52,10 @@ void readImage(unsigned char header[], unsigned char* &image) // perubahan pada 
 void countPixelFrequency(unsigned char* image, int width, int height, int* freq, unsigned char (*data)[3]){
 
     int size = width * height * 3;
-    bool* visited = new bool[size] {false};
+    bool* visited = new bool[size];
+	for (int i = 0; i < size; i++) {
+		visited[i] = false;
+	}
     printf("\nsize : %d\n", size);
 	int count;
 	int j,k;
@@ -75,16 +78,16 @@ void countPixelFrequency(unsigned char* image, int width, int height, int* freq,
         data[index][0] = image[i];
         data[index][1] = image[i+1];
         data[index][2] = image[i+2];
-		printf("(%d, %d, %d) : %d\n", data[index][0], data[index][1],data[index][2], freq[i]);
+		// printf("(%d, %d, %d) : %d\n", data[index][0], data[index][1],data[index][2], freq[i]);
 		index++;
 	}
 	delete[] visited;
 }
 
 // function to print pixel frequency table
-void printPixelFrequency(int* freq,unsigned char (*data)[3]){
+void printPixelFrequency(int* freq,unsigned char (*data)[3], int size){
     printf("\nPixel Frequency Table:\n");
-	for(int i=0; i<99; i++){
+	for(int i=0; i<size; i++){
 		if (freq[i] > 0){
 			printf("(%d, %d, %d) : %d\n", data[i][0], data[i][1],data[i][2], freq[i]);		
 		}
