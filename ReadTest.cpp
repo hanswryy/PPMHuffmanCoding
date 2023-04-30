@@ -29,7 +29,7 @@ void readImage(unsigned char header[], unsigned char* &image) // perubahan pada 
 {
 	FILE *read, *write1;
   	int i, j;
-	read = fopen("sawah.ppm", "rb"); /* b - binary mode */
+	read = fopen("first.ppm", "rb"); /* b - binary mode */
 	
     readPPMHeader(read, header);
     if (header[0]!='P' || header[1]!='6'){
@@ -49,11 +49,7 @@ void readImage(unsigned char header[], unsigned char* &image) // perubahan pada 
     fclose(read);
 }
 
-void countPixelFrequency(unsigned char* image, int width, int height, HuffmanNode* frequencyTable){
-	*frequencyTable = new tHuffmanNode[256 * 256 * 256]();
-	for (int i = 0; i < 256 * 256 * 256; i++) {
-        (*frequencyTable)[i].freq = 0;
-    }
+void countPixelFrequency(unsigned char* image, int width, int height, int* freq, unsigned char (*data)[3]){
 
     int size = width * height * 3;
     bool* visited = new bool[size] {false};
@@ -74,26 +70,24 @@ void countPixelFrequency(unsigned char* image, int width, int height, HuffmanNod
                 count++;
             }
         }
-		
-		(*frequencyTable)[index].freq = count;
-        (*frequencyTable)[index].info[0] = image[i];
-        (*frequencyTable)[index].info[1] = image[i+1];
-        (*frequencyTable)[index].info[2] = image[i+2];
+        
+		freq[index] = count;
+        data[index][0] = image[i];
+        data[index][1] = image[i+1];
+        data[index][2] = image[i+2];
+		printf("(%d, %d, %d) : %d\n", data[index][0], data[index][1],data[index][2], freq[i]);
 		index++;
-		
 	}
 	delete[] visited;
 }
 
 // function to print pixel frequency table
-void printPixelFrequency(HuffmanNode frequencyTable){
+void printPixelFrequency(int* freq,unsigned char (*data)[3]){
     printf("\nPixel Frequency Table:\n");
-	for(int i=0; i<256*256*256; i++){
-        if(frequencyTable[i].freq > 0){
-            printf("(%d, %d, %d) : %d\n", 
-                   frequencyTable[i].info[0], frequencyTable[i].info[1], frequencyTable[i].info[2],
-                   frequencyTable[i].freq);
-        }
+	for(int i=0; i<99; i++){
+		if (freq[i] > 0){
+			printf("(%d, %d, %d) : %d\n", data[i][0], data[i][1],data[i][2], freq[i]);		
+		}
     }
 }
 
