@@ -161,8 +161,9 @@ void encodeHuffman(HuffmanTreeNode *root, unsigned char header[], unsigned char 
 	FILE *write;
 	int i = 0, j = 0, k = 0;
 	write = fopen("Test1.txt", "w");
-	encodeTree(root, write);
+	encodeTree(root, write);//write the tree to the file
 	fprintf(write, "\n");
+	/*write the header to the file*/
 	for (; j < 15; j++)
 	{
 		fprintf(write, "%c", header[j]);
@@ -176,6 +177,8 @@ void encodeHuffman(HuffmanTreeNode *root, unsigned char header[], unsigned char 
 		}
 	}
 	fclose(write);
+
+	/*testing write bits to the file*/
 	int arr[MAX_SIZE], top = 0;
 	// rgbtoCodes(root, arr, top, size, image);
 	bitset<8> writebit;
@@ -226,6 +229,8 @@ void encodeTree(HuffmanTreeNode *node, FILE *file)
 	}
 }
 
+
+//travers the tree but not working
 void rgbtoCodes(HuffmanTreeNode *root,
 				int arr[], int top, int size, unsigned char *image)
 {
