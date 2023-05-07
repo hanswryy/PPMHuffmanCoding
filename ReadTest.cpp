@@ -1,4 +1,4 @@
-#include "PPMReader.h"
+#include "header.h"
 
 
 void readPPMHeader(FILE *file, unsigned char *header){
@@ -29,7 +29,7 @@ void readImage(unsigned char header[], unsigned char* &image) // perubahan pada 
 {
 	FILE *read, *write1;
   	int i, j;
-	read = fopen("gradin.ppm", "rb"); /* b - binary mode */
+	read = fopen("FLAG.ppm", "rb"); /* b - binary mode */
 	
     readPPMHeader(read, header);
     if (header[0]!='P' || header[1]!='6'){
@@ -93,4 +93,3 @@ void printPixelFrequency(int* freq,unsigned char (*data)[3], int size){
 		}
     }
 }
-
