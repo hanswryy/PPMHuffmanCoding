@@ -11,7 +11,7 @@
 using namespace std;
 
 // Maximum Height of Huffman Tree.
-#define MAX_SIZE 10000
+#define MAX_SIZE 100
 
 // Function to generate Huffman
 // Encoding Tree

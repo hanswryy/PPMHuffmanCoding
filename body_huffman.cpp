@@ -34,7 +34,7 @@ HuffmanTreeNode* generateTree(priority_queue<HuffmanTreeNode*,
 		// with frequency left->freq
 		// + right->freq
 
-		// We take data as '0, 0, 0'
+		// We take data as '$'
 		// because we are only
 		// concerned with the
 		// frequency
@@ -82,7 +82,7 @@ void printCodes(HuffmanTreeNode* root,
 	// We also print the code
 	// for this character from arr
 	if (!root->left && !root->right) {
-        printf("(%hhu, %hhu, %hhu) \n\t", root->data[0], root->data[1],root->data[2]);		
+        printf("(%hhu, %hhu, %hhu)", root->data[0], root->data[1],root->data[2]);		
 		for (int i = 0; i < top; i++) {
 			cout << arr[i];
 		}
