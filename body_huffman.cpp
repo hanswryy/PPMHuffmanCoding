@@ -301,17 +301,16 @@ HuffmanTreeNode *treeisBack(FILE *read)
 	{
 		c = fgetc(read);
 		if(c == '1'){
-			fscanf(read, "%hhu, %hhu, %hhu", &data[0], &data[1], &data[2]);
+			fscanf(read, "%hhu %hhu %hhu", &data[0], &data[1], &data[2]);
 			printf("(%hhu, %hhu, %hhu)\n", data[0], data[1], data[2]);
 			return new HuffmanTreeNode(data, 0);
 		}
-		else{
+		else {
 			HuffmanTreeNode *left = treeisBack(read);
 			HuffmanTreeNode *right = treeisBack(read);
 			HuffmanTreeNode *root = new HuffmanTreeNode(0, 0);
 			root->left = left;
 			root->right = right;
-			printf("halo");
 			return root;
 		}
 	}
