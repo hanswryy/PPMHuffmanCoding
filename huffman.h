@@ -43,4 +43,10 @@ void encodeTree(HuffmanTreeNode* root, FILE* file);
 void rgbtoCodes(HuffmanTreeNode *root,
 				int arr[], int top, int size, unsigned char *image);
 
+HuffmanTreeNode *treeisBack(FILE *read);
+
+void decodeHuffman();
+
+void readHeader(FILE *read, unsigned char *header);
+
 #endif
