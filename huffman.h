@@ -5,8 +5,11 @@
 // using Priority Queue
 #include <iostream>
 #include <queue>
+#include <stdio.h>
 #include "HuffmanTreeNode.h"
 #include "Compare.h"
+#include <bitset>
+#include <fstream>
 
 using namespace std;
 
@@ -30,5 +33,14 @@ void printCodes(HuffmanTreeNode* root,
 void HuffmanCodes(unsigned char (*data)[3],
 				int freq[], int size);
 
+HuffmanTreeNode* giveTree(unsigned char (*data)[3],
+				int freq[], int size);
+
+void encodeHuffman(HuffmanTreeNode* root, unsigned char header[], unsigned char *image, int size);
+
+void encodeTree(HuffmanTreeNode* root, FILE* file);
+
+void rgbtoCodes(HuffmanTreeNode *root,
+				int arr[], int top, int size, unsigned char *image);
 
 #endif

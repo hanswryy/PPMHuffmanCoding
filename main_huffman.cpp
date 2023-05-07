@@ -4,7 +4,9 @@
 
 int main() {
     unsigned char header[15], *image;
+    HuffmanTreeNode* root = NULL;
 	readImage(header, image); 
+    
 	
 	int width, height, pos = 3;
 	width = getDimension(header, pos);
@@ -24,6 +26,11 @@ int main() {
 	printPixelFrequency(freq, data, width*height);
 
     HuffmanCodes(data, freq, width*height);
+
+    root = giveTree(data, freq, width*height);
+    int arr[MAX_SIZE];
+    printf("Printing codes from tree\n");
+    encodeHuffman(root, header, image, 7);
 
 	free(image);
     free(freq);

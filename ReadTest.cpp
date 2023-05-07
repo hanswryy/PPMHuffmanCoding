@@ -45,6 +45,7 @@ void readImage(unsigned char header[], unsigned char* &image) // perubahan pada 
     image = new unsigned char [width * height * 3];
     readPPMImage(read, image, width*height*3);
     // Validate the pixel intensities (rgb) of the first pixel. (255 29 29)
+    printf("\n%d\n", image[2]);
     
     fclose(read);
 }
