@@ -16,6 +16,14 @@ using namespace std;
 // Maximum Height of Huffman Tree.
 #define MAX_SIZE 100
 
+typedef struct HuffmanDict{
+	unsigned char data[3];
+	int code[MAX_SIZE];
+	HuffmanDict * next;
+} HuffmanDict;
+
+typedef HuffmanDict * HuffmanDictPtr;
+
 // Function to generate Huffman
 // Encoding Tree
 HuffmanTreeNode* generateTree(priority_queue<HuffmanTreeNode*,
@@ -48,5 +56,8 @@ HuffmanTreeNode *treeisBack(FILE *read);
 void decodeHuffman();
 
 void readHeader(FILE *read, unsigned char *header);
+
+void dictionary(HuffmanTreeNode *root,
+				int arr[], int top, HuffmanDictPtr dict, int i);
 
 #endif

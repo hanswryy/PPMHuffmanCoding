@@ -30,8 +30,9 @@ int main() {
     root = giveTree(data, freq, width*height);
     int arr[MAX_SIZE];
     printf("Printing codes from tree\n");
-    //encodeHuffman(root, header, image, 7);
-    decodeHuffman();
+    //dictionary(root, arr, 0, dict);
+    encodeHuffman(root, header, image, 7);
+    //decodeHuffman();
 
 	free(image);
     free(freq);

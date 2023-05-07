@@ -87,6 +87,7 @@ void printCodes(HuffmanTreeNode *root,
 	// for this character from arr
 	if (!root->left && !root->right)
 	{
+
 		printf("(%hhu, %hhu, %hhu)", root->data[0], root->data[1], root->data[2]);
 		for (int i = 0; i < top; i++)
 		{
@@ -180,7 +181,8 @@ void encodeHuffman(HuffmanTreeNode *root, unsigned char header[], unsigned char 
 
 	/*testing write bits to the file*/
 	int arr[MAX_SIZE], top = 0;
-	// rgbtoCodes(root, arr, top, size, image);
+	rgbtoCodes(root, arr, top, size, image);
+	printf("hi");
 	bitset<8> writebit;
 	unsigned long n;
 	ofstream output("Test1.txt", ios::app);
@@ -201,7 +203,6 @@ void encodeHuffman(HuffmanTreeNode *root, unsigned char header[], unsigned char 
 		{
 			n = writebit.to_ulong();
 			output.write(reinterpret_cast<const char *>(&n), sizeof(n));
-			printf("writing");
 			k = 0;
 			writebit.reset();
 		}
@@ -211,83 +212,43 @@ void encodeHuffman(HuffmanTreeNode *root, unsigned char header[], unsigned char 
 	output.close();
 }
 
+// travers the tree but not working
+void rgbtoCodes(HuffmanTreeNode *root,
+				int arr[], int top, int size, unsigned char *image)
+{
+	HuffmanDictPtr dict;
+    dict = (HuffmanDictPtr)malloc(sizeof(HuffmanDict));
+    dictionary(root, arr, top, dict, 1);
+    printf("(%hhu, %hhu, %hhu)", dict->data[0], dict->data[1], dict->data[2]);
+    printf("hi");
+}
+
 void encodeTree(HuffmanTreeNode *node, FILE *file)
 {
 	if (!node->left && !node->right)
 	{
-		printf("1");
 		fwrite("1", 1, 1, file);
-		printf("(%hhu, %hhu, %hhu)", node->data[0], node->data[1], node->data[2]);
-		fprintf(file, "(%hhu %hhu %hhu)", node->data[0], node->data[1], node->data[2]);
+		fprintf(file, " %hhu %hhu %hhu ", node->data[0], node->data[1], node->data[2]);
 	}
 	else
 	{
-		printf("0");
 		fwrite("0", 1, 1, file);
 		encodeTree(node->left, file);
 		encodeTree(node->right, file);
 	}
 }
 
-// travers the tree but not working
-void rgbtoCodes(HuffmanTreeNode *root,
-				int arr[], int top, int size, unsigned char *image)
+void decodeHuffman()
 {
-	int i = 0, j = 0, k = 0;
-	bitset<8> writebit;
-	unsigned long n;
-	ofstream output("Test1.txt", ios::app);
-	for (i = 0; i < size; i += 3)
-	{
-		if (root->left)
-		{
-			arr[top] = 0;
-			rgbtoCodes(root->left,
-					   arr, top + 1, size, image);
-		}
-		if (root->right)
-		{
-			arr[top] = 1;
-			rgbtoCodes(root->right, arr, top + 1, size, image);
-		}
-		if (!root->left && !root->right)
-		{
-			if (root->data[0] == image[i] && root->data[1] == image[i + 1] && root->data[2] == image[i + 2])
-			{
-				for (int j = 0; j < top; j++)
-				{
-					if (arr[j] == 0)
-					{
-						writebit.set(k, 0);
-					}
-					else
-					{
-						writebit.set(k, 1);
-					}
-					k++;
-					if (k == 8)
-					{
-						n = writebit.to_ulong();
-						output.write(reinterpret_cast<const char *>(&n), sizeof(n));
-						printf("writing");
-						k = 0;
-						writebit.reset();
-					}
-				}
-			}
-		}
-	}
-}
-
-void decodeHuffman(){
 	unsigned char header[15];
 	FILE *read = fopen("Test1.txt", "r");
-	if (read == NULL) {
-        printf("File tidak ditemukan\n");
-    }
+	if (read == NULL)
+	{
+		printf("File tidak ditemukan\n");
+	}
 	HuffmanTreeNode *root = treeisBack(read);
 	int arr[MAX_SIZE], top = 0;
-	
+
 	printCodes(root, arr, top);
 	readHeader(read, header);
 }
@@ -300,12 +261,14 @@ HuffmanTreeNode *treeisBack(FILE *read)
 	while (c != '\n')
 	{
 		c = fgetc(read);
-		if(c == '1'){
+		if (c == '1')
+		{
 			fscanf(read, "%hhu %hhu %hhu", &data[0], &data[1], &data[2]);
 			printf("(%hhu, %hhu, %hhu)\n", data[0], data[1], data[2]);
 			return new HuffmanTreeNode(data, 0);
 		}
-		else {
+		else
+		{
 			HuffmanTreeNode *left = treeisBack(read);
 			HuffmanTreeNode *right = treeisBack(read);
 			HuffmanTreeNode *root = new HuffmanTreeNode(0, 0);
@@ -317,8 +280,9 @@ HuffmanTreeNode *treeisBack(FILE *read)
 	return 0;
 }
 
-//just read the header from txt
-void readHeader(FILE *read, unsigned char *header){
+// just read the header from txt
+void readHeader(FILE *read, unsigned char *header)
+{
 	int i = 0, j = 0;
 	char c;
 	while (j < 3)
@@ -326,8 +290,37 @@ void readHeader(FILE *read, unsigned char *header){
 		c = fgetc(read);
 		header[i] = c;
 		i++;
-		if(c == '\n'){
+		if (c == '\n')
+		{
 			j++;
 		}
 	}
+}
+
+//make the list of leaf node with the way of traversing the tree
+void dictionary(HuffmanTreeNode *root,
+				int arr[], int top, HuffmanDictPtr dict, int i)
+{
+	if (i != 1) {
+        dict->next = (HuffmanDictPtr)malloc(sizeof(HuffmanDict));
+        dict = dict->next;
+    }
+    i++;
+    if (root->left) {
+        arr[top] = 0;
+        dictionary(root->left, arr, top + 1, dict, i);
+    }
+    if (root->right) {
+        arr[top] = 1;
+        dictionary(root->right, arr, top + 1, dict, i);
+    }
+    if (!root->left && !root->right) {
+        dict->data[0] = root->data[0];
+        dict->data[1] = root->data[1];
+        dict->data[2] = root->data[2];
+        for (int j = 0; j < top; j++) {
+            dict->code[j] = arr[j];
+        }
+        dict->code[top] = -1;
+    }
 }
