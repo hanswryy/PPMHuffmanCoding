@@ -103,6 +103,7 @@ void printCodes(HuffmanTreeNode *root,
 
 void fixEncode(unsigned char *image, int size)
 {
+	printf("%hhu %hhu %hhu\n", image[0], image[1], image[2]);
 	int k = 0;
 	bitset<8> writebit;
 	unsigned long n;
@@ -110,8 +111,7 @@ void fixEncode(unsigned char *image, int size)
 	unsigned char data[3];
 	char code[100];
 	FILE * file = fopen("code.txt", "r");
-	for (int i = 0; i < size; i+=3)
-	{
+	for(int i = 0; i < size; i+=3){
 		while(!feof(file)){
 			fscanf(file, "%hhu %hhu %hhu ", &data[0], &data[1], &data[2]);
 			fscanf(file, "%s", code);
@@ -119,11 +119,11 @@ void fixEncode(unsigned char *image, int size)
 			{
 				for (int j = 0; j < strlen(code); j++)
 				{
-					if (code[j] == 0)
+					if (code[j] == '0')
 					{
 						writebit.set(k, 0);
 					}
-					else
+					else if (code[j] == '1')
 					{
 						writebit.set(k, 1);
 					}
@@ -145,7 +145,7 @@ void fixEncode(unsigned char *image, int size)
 	output.write(reinterpret_cast<const char *>(&n), sizeof(n));
 	output.close();
 	fclose(file);
-	remove("code.txt");
+	//remove("code.txt");
 }
 
 void HuffmanCodes(unsigned char (*data)[3],
@@ -213,21 +213,21 @@ void encodeHuffman(HuffmanTreeNode *root, unsigned char header[], unsigned char 
 	FILE *write;
 	int i = 0, j = 0, k = 0;
 	write = fopen("Test1.txt", "w");
-	encodeTree(root, write); // write the tree to the file
+	//encodeTree(root, write); // write the tree to the file
 	fprintf(write, "\n");
 	/*write the header to the file*/
-	for (; j < 15; j++)
-	{
-		fprintf(write, "%c", header[j]);
-		if (header[j] == '\n')
-		{
-			i++;
-		}
-		if (i == 3)
-		{
-			break;
-		}
-	}
+	// for (; j < 15; j++)
+	// {
+	// 	fprintf(write, "%c", header[j]);
+	// 	if (header[j] == '\n')
+	// 	{
+	// 		i++;
+	// 	}
+	// 	if (i == 3)
+	// 	{
+	// 		break;
+	// 	}
+	// }
 	fclose(write);
 	fixEncode(image, size);
 }
@@ -255,11 +255,23 @@ void decodeHuffman()
 	{
 		printf("File tidak ditemukan\n");
 	}
-	HuffmanTreeNode *root = treeisBack(read);
+	//HuffmanTreeNode *root = treeisBack(read);
 	int arr[MAX_SIZE], top = 0;
 
-	printCodes(root, arr, top);
-	readHeader(read, header);
+	//printCodes(root, arr, top);
+	//readHeader(read, header);
+
+	ifstream input("Test1.txt", ios::binary);
+	
+	bitset<8> readbit;
+	unsigned long byte;
+	cout << endl;
+	for(int i = 0; i < 100; i++){
+		input.read(reinterpret_cast<char *>(&byte), sizeof(byte));
+		// print the byte
+		readbit = byte;
+		cout << readbit << endl;
+	}
 }
 
 // read the tree from the file
@@ -273,13 +285,14 @@ HuffmanTreeNode *treeisBack(FILE *read)
 		if (c == '1')
 		{
 			fscanf(read, "%hhu %hhu %hhu", &data[0], &data[1], &data[2]);
-			printf("(%hhu, %hhu, %hhu)\n", data[0], data[1], data[2]);
+			//printf("(%hhu, %hhu, %hhu)\n", data[0], data[1], data[2]);
 			return new HuffmanTreeNode(data, 0);
 		}
 		else
 		{
 			HuffmanTreeNode *left = treeisBack(read);
 			HuffmanTreeNode *right = treeisBack(read);
+
 			HuffmanTreeNode *root = new HuffmanTreeNode(0, 0);
 			root->left = left;
 			root->right = right;
