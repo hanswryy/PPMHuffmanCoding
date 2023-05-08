@@ -218,9 +218,9 @@ void rgbtoCodes(HuffmanTreeNode *root,
 {
 	HuffmanDictPtr dict;
     dict = (HuffmanDictPtr)malloc(sizeof(HuffmanDict));
-    dictionary(root, arr, top, dict, 1);
+    dictionary(root, arr, top, &dict, 1);
     printf("(%hhu, %hhu, %hhu)", dict->data[0], dict->data[1], dict->data[2]);
-    printf("hi");
+    printf("hi2");
 }
 
 void encodeTree(HuffmanTreeNode *node, FILE *file)
@@ -299,28 +299,28 @@ void readHeader(FILE *read, unsigned char *header)
 
 //make the list of leaf node with the way of traversing the tree
 void dictionary(HuffmanTreeNode *root,
-				int arr[], int top, HuffmanDictPtr dict, int i)
+				int arr[], int top, HuffmanDictPtr *dict, int i)
 {
 	if (i != 1) {
-        dict->next = (HuffmanDictPtr)malloc(sizeof(HuffmanDict));
-        dict = dict->next;
+        (*dict)->next = (HuffmanDictPtr)malloc(sizeof(HuffmanDict));
+        (*dict) = (*dict)->next;
     }
     i++;
     if (root->left) {
         arr[top] = 0;
-        dictionary(root->left, arr, top + 1, dict, i);
+        dictionary(root->left, arr, top + 1, &(*dict), i);
     }
     if (root->right) {
         arr[top] = 1;
-        dictionary(root->right, arr, top + 1, dict, i);
+        dictionary(root->right, arr, top + 1, &(*dict), i);
     }
     if (!root->left && !root->right) {
-        dict->data[0] = root->data[0];
-        dict->data[1] = root->data[1];
-        dict->data[2] = root->data[2];
+        (*dict)->data[0] = root->data[0];
+        (*dict)->data[1] = root->data[1];
+        (*dict)->data[2] = root->data[2];
         for (int j = 0; j < top; j++) {
-            dict->code[j] = arr[j];
+            (*dict)->code[j] = arr[j];
         }
-        dict->code[top] = -1;
+        (*dict)->code[top] = -1;
     }
 }

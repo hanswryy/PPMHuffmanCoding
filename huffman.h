@@ -58,6 +58,6 @@ void decodeHuffman();
 void readHeader(FILE *read, unsigned char *header);
 
 void dictionary(HuffmanTreeNode *root,
-				int arr[], int top, HuffmanDictPtr dict, int i);
+				int arr[], int top, HuffmanDictPtr *dict, int i);
 
 #endif
