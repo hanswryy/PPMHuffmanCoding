@@ -4,6 +4,7 @@
 
 int main() {
     unsigned char header[15], *image;
+    int sumrgb;
     HuffmanTreeNode* root = NULL;
 	readImage(header, image); 
     
@@ -27,11 +28,11 @@ int main() {
 
     HuffmanCodes(data, freq, width*height);
 
-    root = giveTree(data, freq, width*height);
+    root = giveTree(data, freq, width*height, &sumrgb);
+
     int arr[MAX_SIZE];
     printf("Printing codes from tree\n");
-    //dictionary(root, arr, 0, dict);
-    encodeHuffman(root, header, image, 7);
+    encodeHuffman(root, header, image, width*height*3);
     //decodeHuffman();
 
 	free(image);

@@ -87,14 +87,65 @@ void printCodes(HuffmanTreeNode *root,
 	// for this character from arr
 	if (!root->left && !root->right)
 	{
-
+		FILE  *file = fopen("code.txt","a");
 		printf("(%hhu, %hhu, %hhu)", root->data[0], root->data[1], root->data[2]);
+		fprintf(file, "%hhu %hhu %hhu ", root->data[0], root->data[1], root->data[2]);
 		for (int i = 0; i < top; i++)
 		{
 			cout << arr[i];
+			fprintf(file, "%d", arr[i]);
 		}
 		cout << endl;
+		fprintf(file, "\n");
+		fclose(file);
 	}
+}
+
+void fixEncode(unsigned char *image, int size)
+{
+	int k = 0;
+	bitset<8> writebit;
+	unsigned long n;
+	ofstream output("Test1.txt", ios::app);
+	unsigned char data[3];
+	char code[100];
+	FILE * file = fopen("code.txt", "r");
+	for (int i = 0; i < size; i+=3)
+	{
+		while(!feof(file)){
+			fscanf(file, "%hhu %hhu %hhu ", &data[0], &data[1], &data[2]);
+			fscanf(file, "%s", code);
+			if (data[0] == image[i] && data[1] == image[i+1] && data[2] == image[i+2])
+			{
+				for (int j = 0; j < strlen(code); j++)
+				{
+					if (code[j] == 0)
+					{
+						writebit.set(k, 0);
+					}
+					else
+					{
+						writebit.set(k, 1);
+					}
+					k++;
+					if (k == 8)
+					{
+						n = writebit.to_ulong();
+						output.write(reinterpret_cast<const char *>(&n), sizeof(n));
+						k = 0;
+						writebit.reset();
+					}				
+				}
+				break;
+			}
+		}
+		fseek(file, 0, SEEK_SET);
+	}
+	n = writebit.to_ulong();
+	output.write(reinterpret_cast<const char *>(&n), sizeof(n));
+	output.close();
+	fclose(file);
+	remove("code.txt");
 }
 
 void HuffmanCodes(unsigned char (*data)[3],
@@ -130,7 +181,7 @@ void HuffmanCodes(unsigned char (*data)[3],
 }
 
 HuffmanTreeNode *giveTree(unsigned char (*data)[3],
-						  int freq[], int size)
+						  int freq[], int size, int* arrsize)
 {
 
 	// Declaring priority queue
@@ -151,7 +202,7 @@ HuffmanTreeNode *giveTree(unsigned char (*data)[3],
 		HuffmanTreeNode *newNode = new HuffmanTreeNode(data[i], freq[i]);
 		pq.push(newNode);
 	}
-
+	*arrsize = pq.size();
 	// Generate Huffman Encoding
 	// Tree and get the root node
 	return generateTree(pq);
@@ -178,49 +229,7 @@ void encodeHuffman(HuffmanTreeNode *root, unsigned char header[], unsigned char 
 		}
 	}
 	fclose(write);
-
-	/*testing write bits to the file*/
-	int arr[MAX_SIZE], top = 0;
-	rgbtoCodes(root, arr, top, size, image);
-	printf("hi");
-	bitset<8> writebit;
-	unsigned long n;
-	ofstream output("Test1.txt", ios::app);
-	// n = writebit.to_ulong();
-	// output.write(reinterpret_cast<const char *>(&n), sizeof(n));
-	for (int j = 0; j < 20; j++)
-	{
-		if (j % 2 == 0)
-		{
-			writebit.set(k, 0);
-		}
-		else
-		{
-			writebit.set(k, 1);
-		}
-		k++;
-		if (k == 8)
-		{
-			n = writebit.to_ulong();
-			output.write(reinterpret_cast<const char *>(&n), sizeof(n));
-			k = 0;
-			writebit.reset();
-		}
-	}
-	n = writebit.to_ulong();
-	output.write(reinterpret_cast<const char *>(&n), sizeof(n));
-	output.close();
-}
-
-// travers the tree but not working
-void rgbtoCodes(HuffmanTreeNode *root,
-				int arr[], int top, int size, unsigned char *image)
-{
-	HuffmanDictPtr dict;
-    dict = (HuffmanDictPtr)malloc(sizeof(HuffmanDict));
-    dictionary(root, arr, top, &dict, 1);
-    printf("(%hhu, %hhu, %hhu)", dict->data[0], dict->data[1], dict->data[2]);
-    printf("hi2");
+	fixEncode(image, size);
 }
 
 void encodeTree(HuffmanTreeNode *node, FILE *file)
@@ -295,32 +304,4 @@ void readHeader(FILE *read, unsigned char *header)
 			j++;
 		}
 	}
-}
-
-//make the list of leaf node with the way of traversing the tree
-void dictionary(HuffmanTreeNode *root,
-				int arr[], int top, HuffmanDictPtr *dict, int i)
-{
-	if (i != 1) {
-        (*dict)->next = (HuffmanDictPtr)malloc(sizeof(HuffmanDict));
-        (*dict) = (*dict)->next;
-    }
-    i++;
-    if (root->left) {
-        arr[top] = 0;
-        dictionary(root->left, arr, top + 1, &(*dict), i);
-    }
-    if (root->right) {
-        arr[top] = 1;
-        dictionary(root->right, arr, top + 1, &(*dict), i);
-    }
-    if (!root->left && !root->right) {
-        (*dict)->data[0] = root->data[0];
-        (*dict)->data[1] = root->data[1];
-        (*dict)->data[2] = root->data[2];
-        for (int j = 0; j < top; j++) {
-            (*dict)->code[j] = arr[j];
-        }
-        (*dict)->code[top] = -1;
-    }
 }
