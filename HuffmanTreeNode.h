@@ -1,7 +1,7 @@
 class HuffmanTreeNode {
 public:
     // Stores character
-    char data[3];
+    unsigned char data[3];
  
     // Stores frequency of
     // the character

@@ -289,7 +289,7 @@ void decodeHuffman(){
 	int arr[MAX_SIZE], top = 0;
 	
 	printCodes(root, arr, top);
-	readHeader(read, header);
+	//readHeader(read, header);
 }
 
 // read the tree from the file
@@ -297,18 +297,19 @@ HuffmanTreeNode *treeisBack(FILE *read)
 {
 	char c;
 	unsigned char data[3];
-	while (c != '\n')
+	// stop when it reads newline
+	while ((c = fgetc(read)) != '\n')
 	{
-		c = fgetc(read);
 		if(c == '1'){
 			fscanf(read, "%hhu %hhu %hhu", &data[0], &data[1], &data[2]);
-			printf("(%hhu, %hhu, %hhu)\n", data[0], data[1], data[2]);
+			//printf("(%hhu, %hhu, %hhu)\n", data[0], data[1], data[2]);
 			return new HuffmanTreeNode(data, 0);
 		}
-		else {
+		else if (c == '0') {
 			HuffmanTreeNode *left = treeisBack(read);
 			HuffmanTreeNode *right = treeisBack(read);
-			HuffmanTreeNode *root = new HuffmanTreeNode(0, 0);
+			unsigned char empty[3] = {0, 0, 0};
+			HuffmanTreeNode *root = new HuffmanTreeNode(empty, 0);
 			root->left = left;
 			root->right = right;
 			return root;
@@ -317,17 +318,17 @@ HuffmanTreeNode *treeisBack(FILE *read)
 	return 0;
 }
 
-//just read the header from txt
-void readHeader(FILE *read, unsigned char *header){
-	int i = 0, j = 0;
-	char c;
-	while (j < 3)
-	{
-		c = fgetc(read);
-		header[i] = c;
-		i++;
-		if(c == '\n'){
-			j++;
-		}
-	}
-}
+// //just read the header from txt
+// void readHeader(FILE *read, unsigned char *header){
+// 	int i = 0, j = 0;
+// 	char c;
+// 	while (j < 3)
+// 	{
+// 		c = fgetc(read);
+// 		header[i] = c;
+// 		i++;
+// 		if(c == '\n'){
+// 			j++;
+// 		}
+// 	}
+// }
