@@ -16,6 +16,7 @@ int main() {
 	printf("\nWidth : %d, Height : %d\n", width, height);
 
 	int *freq = new int[width*height];
+    memset(freq, 0, sizeof *freq * width*height);
     unsigned char (*data)[3] = (unsigned char (*)[3])calloc(width*height, sizeof(unsigned char[3]));
 
     if (freq == NULL || data == NULL) {

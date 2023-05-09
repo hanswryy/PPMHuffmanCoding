@@ -325,7 +325,7 @@ HuffmanTreeNode *treeisBack(FILE *read)
 	// stop when it reads newline
 	while ((c = fgetc(read)) != '\n')
 	{
-		printf("%c", c);
+		//printf("%c", c);
 		if(c == '1'){
 			fscanf(read, "%hhu %hhu %hhu", &data[0], &data[1], &data[2]);
 			printf("(%hhu, %hhu, %hhu)\n", data[0], data[1], data[2]);
@@ -347,7 +347,12 @@ HuffmanTreeNode *treeisBack(FILE *read)
 // just read the header from txt
 void readHeader(FILE *read, unsigned char *header)
 {
-	int i = 0, j = 0;
+	while (fgetc(read) != 'P')
+	{
+		// do nothing
+	}
+	header[0] = 'P';
+	int i = 1, j = 0;
 	char c;
 	while (j < 3)
 	{
