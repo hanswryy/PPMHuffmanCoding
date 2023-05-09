@@ -2,7 +2,8 @@
 #include "huffman.h"
 #include <stdio.h>
 
-int main() {
+int main()
+{
     char filename[100];
     int choice = 0;
     while (choice != 3)
@@ -27,33 +28,42 @@ int main() {
         printf("\n\t\t\tEnter your choice: ");
         scanf("%d", &choice);
 
-        // Handle the user's choice
-        switch (choice)
+        printf("\n\t\t\tWrite the file name : ");
+        scanf("%s", &filename);
+        FILE *file = fopen(filename, "rb");
+        if (file == NULL)
         {
-        case 1:
-            printf("\n\t\t\tWrite the file name : ");
-            scanf("%s", &filename);
-            printf("\t\t\tLoading...\n");
-            Encode(filename);
-            printf("\t\t\tEncode Finish, press any key to continue...");
-            break;
-        case 2:
-            printf("\n\t\t\tWrite the file name : ");
-            scanf("%s", &filename);
-            printf("\t\t\tLoading...\n");
-            Decode(filename);
-            printf("\t\t\tDecode Finish, press any key to continue...");
-            break;
-        case 3:
-            printf("\n\t\t\tPress any key to exit...");
-            break;
-        default:
-            printf("\n\t\t\tInvalid choice.\n");
-            break;
+            printf("\n\t\t\tFile not found, press any key to continue...");
+            fclose(file);
+            getchar();
+            getchar();
         }
-        getchar();
-        getchar();
+        else
+        {
+            fclose(file);
+            // Handle the user's choice
+            switch (choice)
+            {
+            case 1:
+                printf("\t\t\tLoading...\n");
+                Encode(filename);
+                printf("\t\t\tEncode Finish, press any key to continue...");
+                break;
+            case 2:
+                printf("\t\t\tLoading...\n");
+                Decode(filename);
+                printf("\t\t\tDecode Finish, press any key to continue...");
+                break;
+            case 3:
+                printf("\n\t\t\tPress any key to exit...");
+                break;
+            default:
+                printf("\n\t\t\tInvalid choice.\n");
+                break;
+            }
+            getchar();
+            getchar();
+        }
     }
     return 0;
 }
-

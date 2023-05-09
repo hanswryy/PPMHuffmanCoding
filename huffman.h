@@ -33,8 +33,6 @@ HuffmanTreeNode* generateTree(priority_queue<HuffmanTreeNode*,
 void printCodes(HuffmanTreeNode* root,
 				int arr[], int top);
 
-void HuffmanCodes(unsigned char (*data)[3],
-				int freq[], int size);
 
 HuffmanTreeNode* giveTree(unsigned char (*data)[3],
 				int freq[], int size, int * arrsize);
@@ -50,8 +48,6 @@ void decodeHuffman(unsigned char *image, unsigned char header[], int size, char 
 void readHeader(FILE *read, unsigned char header[]);
 
 void fixEncode(unsigned char* image, int size);
-
-void printTree(HuffmanTreeNode* root, int arr[], int top);
 
 void ConvertHuffman(HuffmanTreeNode* root, unsigned char *image, int size, char filename[]);
 

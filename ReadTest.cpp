@@ -1,12 +1,15 @@
 #include "PPMReader.h"
 
+//procedure to read the header of the PPM file
 void readPPMHeader(FILE *file, unsigned char *header){
     fread(header, 15, 1, file);
 }
+//procedure to read the image data of the PPM file
 void readPPMImage(FILE *file, unsigned char *image, int size){
     fread(image, size, 1, file);
 }
 
+//function to get the dimension of the PPM file
 int getDimension(unsigned char *header, int &pos){
     int dim=0;
     // Read through the characters, each char is being read as ASCII. 
@@ -19,11 +22,13 @@ int getDimension(unsigned char *header, int &pos){
     return dim;
 }
 
+//procedure to write the header and the image rgb value of the PPM file
 void writePPM(FILE *file, unsigned char *header, unsigned char *image, int size){
     fwrite(header, 15, 1, file);
     fwrite(image, size, 1, file);
 }
 
+//procedure to read rgb value of the PPM file
 void readImage(unsigned char header[], unsigned char* &image, char filename[]) // perubahan pada bagian parameter
 {
 	FILE *read, *write1;
@@ -43,12 +48,11 @@ void readImage(unsigned char header[], unsigned char* &image, char filename[]) /
     height = getDimension(header, pos);
     image = new unsigned char [width * height * 3];
     readPPMImage(read, image, width*height*3);
-    // Validate the pixel intensities (rgb) of the first pixel. (255 29 29)
-    printf("\n%d\n", image[2]);
     
     fclose(read);
 }
 
+//procedure to count the frequency of each value rgb in the image
 void countPixelFrequency(unsigned char* image, int width, int height, int* freq, unsigned char (*data)[3]){
 
     int size = width * height * 3;
@@ -56,7 +60,6 @@ void countPixelFrequency(unsigned char* image, int width, int height, int* freq,
 	for (int i = 0; i < size; i++) {
 		visited[i] = false;
 	}
-    printf("\nsize : %d\n", size);
 	int count;
 	int j,k;
 	int index = 0;
@@ -78,20 +81,7 @@ void countPixelFrequency(unsigned char* image, int width, int height, int* freq,
         data[index][0] = image[i];
         data[index][1] = image[i+1];
         data[index][2] = image[i+2];
-		// printf("(%d, %d, %d) : %d\n", data[index][0], data[index][1],data[index][2], freq[i]);
 		index++;
 	}
 	delete[] visited;
 }
-
-// function to print pixel frequency table
-void printPixelFrequency(int* freq,unsigned char (*data)[3], int size){
-    printf("\nPixel Frequency Table:\n");
-	for(int i=0; i<size; i++){
-		if (freq[i] > 0){
-			printf("(%d, %d, %d) : %d\n", data[i][0], data[i][1],data[i][2], freq[i]);	
-            	
-		}
-    }
-}
-
