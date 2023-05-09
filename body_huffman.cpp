@@ -60,7 +60,7 @@ HuffmanTreeNode *generateTree(priority_queue<HuffmanTreeNode *,
 // character.
 
 // It uses file to store the codes
-void printCodes(HuffmanTreeNode *root,
+void writeCodetoFile(HuffmanTreeNode *root,
 				int arr[], int top)
 {
 	// Assign 0 to the left node
@@ -68,7 +68,7 @@ void printCodes(HuffmanTreeNode *root,
 	if (root->left)
 	{
 		arr[top] = 0;
-		printCodes(root->left,
+		writeCodetoFile(root->left,
 				   arr, top + 1);
 	}
 
@@ -77,7 +77,7 @@ void printCodes(HuffmanTreeNode *root,
 	if (root->right)
 	{
 		arr[top] = 1;
-		printCodes(root->right, arr, top + 1);
+		writeCodetoFile(root->right, arr, top + 1);
 	}
 
 	// If this is a leaf node,
@@ -99,7 +99,7 @@ void printCodes(HuffmanTreeNode *root,
 }
 
 //this procedure is used to replace the rgb value with binary value from the tree
-void fixEncode(unsigned char *image, int size)
+void writeEncoded(unsigned char *image, int size)
 {
 	int k = 7;
 	bitset<8> writebit;
@@ -155,7 +155,7 @@ void fixEncode(unsigned char *image, int size)
 }
 
 //this function is used to get the huffman tree from the rgb value
-HuffmanTreeNode *giveTree(unsigned char (*data)[3],
+HuffmanTreeNode *buildHuffmanTree(unsigned char (*data)[3],
 						  int freq[], int size, int *arrsize)
 {
 
@@ -193,7 +193,7 @@ void encodeHuffman(HuffmanTreeNode *root, unsigned char header[], unsigned char 
 	filename[lenFilename-1] = 't';
 
 	//this is used to encode the rgb value to binary value
-	fixEncode(image, size);
+	writeEncoded(image, size);
 
 	FILE *write;
 	int i = 0, j = 0, k = 0;
@@ -243,19 +243,19 @@ void decodeHuffman(unsigned char *image, unsigned char header[], int size, char 
 	{
 		printf("File tidak ditemukan\n");
 	}
-	HuffmanTreeNode *root = treeisBack(read);//get the tree from the file txt
+	HuffmanTreeNode *root = rebuildTree(read);//get the tree from the file txt
 	int arr[MAX_SIZE], top = 0;
-	readHeader(read, header);//read the header from the file txt
+	readHeaderFromFile(read, header);//read the header from the file txt
 	int width, height, pos = 3;
 	width = getDimension(header, pos);
 	pos++;
 	height = getDimension(header, pos);
-	ConvertHuffman(root, image, size, filename);//decode the file txt to the image.ppm
+	ConvertCodetoData(root, image, size, filename);//decode the file txt to the image.ppm
 	fclose(read);
 }
 
 // read the tree from the file
-HuffmanTreeNode *treeisBack(FILE *read)
+HuffmanTreeNode *rebuildTree(FILE *read)
 {
 	char c;
 	unsigned char data[3];
@@ -269,8 +269,8 @@ HuffmanTreeNode *treeisBack(FILE *read)
 		}
 		else if (c == '0')
 		{
-			HuffmanTreeNode *left = treeisBack(read);
-			HuffmanTreeNode *right = treeisBack(read);
+			HuffmanTreeNode *left = rebuildTree(read);
+			HuffmanTreeNode *right = rebuildTree(read);
 			unsigned char empty[3] = {0, 0, 0};
 			HuffmanTreeNode *root = new HuffmanTreeNode(empty, 0);
 			root->left = left;
@@ -282,7 +282,7 @@ HuffmanTreeNode *treeisBack(FILE *read)
 }
 
 // just read the header from txt
-void readHeader(FILE *read, unsigned char header[])
+void readHeaderFromFile(FILE *read, unsigned char header[])
 {
 	while (fgetc(read) != 'P')
 	{
@@ -303,7 +303,7 @@ void readHeader(FILE *read, unsigned char header[])
 }
 
 //convert the binary value from txt file to rgb value
-void ConvertHuffman(HuffmanTreeNode *root, unsigned char *image, int size, char filename[])
+void ConvertCodetoData(HuffmanTreeNode *root, unsigned char *image, int size, char filename[])
 {
 	ifstream input(filename, ios::binary);
 	bitset<8> readbit;
@@ -317,7 +317,7 @@ void ConvertHuffman(HuffmanTreeNode *root, unsigned char *image, int size, char 
 		readbit = byte;
 		for (int k = 0; k < 8; k++)
 		{
-			Traverse(&temp, readbit.to_string()[k], info);
+			TraverseTree(&temp, readbit.to_string()[k], info);
 			if (info[0] != 0 && info[1] != 0 && info[2] != 0)
 			{
 				for (int i = 0; i < 3; i++)
@@ -337,7 +337,7 @@ void ConvertHuffman(HuffmanTreeNode *root, unsigned char *image, int size, char 
 }
 
 //this procedure is used to traverse the tree to get the rgb value
-void Traverse(HuffmanTreeNode **root, char c, unsigned char info[3])
+void TraverseTree(HuffmanTreeNode **root, char c, unsigned char info[3])
 {
 	if (c == '0')
 	{
@@ -384,9 +384,9 @@ void Encode(char filename[])
 	else
 	{
 		countPixelFrequency(image, width, height, freq, data);
-		root = giveTree(data, freq, width * height, &sumrgb);
+		root = buildHuffmanTree(data, freq, width * height, &sumrgb);
 		int arr[MAX_SIZE], top = 0;
-		printCodes(root, arr, top);
+		writeCodetoFile(root, arr, top);
 		encodeHuffman(root, header, image, width * height * 3, filename);
 	}
 }
@@ -397,7 +397,7 @@ void Decode(char filename1[])
 {
 	FILE *read = fopen(filename1, "r");
 	unsigned char resultHeader[15];
-	readHeader(read, resultHeader);
+	readHeaderFromFile(read, resultHeader);
 	int width, height, pos = 3;
 	width = getDimension(resultHeader, pos);
 	pos++;
