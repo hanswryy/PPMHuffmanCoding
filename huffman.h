@@ -49,5 +49,6 @@ void readHeader(FILE *read, unsigned char *header);
 
 void fixEncode(unsigned char* image, int size);
 
+void printTree(HuffmanTreeNode* root, int arr[], int top);
 
 #endif

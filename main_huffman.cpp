@@ -29,10 +29,13 @@ int main() {
     HuffmanCodes(data, freq, width*height);
 
     root = giveTree(data, freq, width*height, &sumrgb);
+    int arr[MAX_SIZE], top = 0;
+    printCodes(root, arr, top);
+    printTree(root, arr, top);
 
-    int arr[MAX_SIZE];
     printf("Printing codes from tree\n");
-    printf("%i %i %i", image[0], image[1], image[2]);
+    //printf("%i %i %i", image[0], image[1], image[2]);
+
     encodeHuffman(root, header, image, width*height*3);
     decodeHuffman();
     
@@ -40,6 +43,8 @@ int main() {
 	free(image);
     free(freq);
     free(data);
+
+    remove("code.txt");
     return 0;
 }
 
