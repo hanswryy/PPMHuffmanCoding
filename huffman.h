@@ -5,13 +5,17 @@
 // using Priority Queue
 #include <iostream>
 #include <queue>
+#include <stdio.h>
 #include "HuffmanTreeNode.h"
 #include "Compare.h"
+#include <bitset>
+#include <fstream>
 
 using namespace std;
 
 // Maximum Height of Huffman Tree.
 #define MAX_SIZE 100
+
 
 // Function to generate Huffman
 // Encoding Tree
@@ -30,5 +34,25 @@ void printCodes(HuffmanTreeNode* root,
 void HuffmanCodes(unsigned char (*data)[3],
 				int freq[], int size);
 
+HuffmanTreeNode* giveTree(unsigned char (*data)[3],
+				int freq[], int size, int * arrsize);
+
+void encodeHuffman(HuffmanTreeNode* root, unsigned char header[], unsigned char *image, int size);
+
+void encodeTree(HuffmanTreeNode* root, FILE* file);
+
+HuffmanTreeNode *treeisBack(FILE *read);
+
+void decodeHuffman(unsigned char *image, unsigned char header[], int size);
+
+void readHeader(FILE *read, unsigned char *header);
+
+void fixEncode(unsigned char* image, int size);
+
+void printTree(HuffmanTreeNode* root, int arr[], int top);
+
+void ConvertHuffman(HuffmanTreeNode* root, unsigned char *image, int size);
+
+void Traverse(HuffmanTreeNode** root, char c, unsigned char info[3]);
 
 #endif

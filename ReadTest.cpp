@@ -1,6 +1,5 @@
 #include "PPMReader.h"
 
-
 void readPPMHeader(FILE *file, unsigned char *header){
     fread(header, 15, 1, file);
 }
@@ -29,7 +28,7 @@ void readImage(unsigned char header[], unsigned char* &image) // perubahan pada 
 {
 	FILE *read, *write1;
   	int i, j;
-	read = fopen("sawah.ppm", "rb"); /* b - binary mode */
+	read = fopen("Test1.ppm", "rb"); /* b - binary mode */
 	
     readPPMHeader(read, header);
     if (header[0]!='P' || header[1]!='6'){
@@ -45,6 +44,7 @@ void readImage(unsigned char header[], unsigned char* &image) // perubahan pada 
     image = new unsigned char [width * height * 3];
     readPPMImage(read, image, width*height*3);
     // Validate the pixel intensities (rgb) of the first pixel. (255 29 29)
+    printf("\n%d\n", image[2]);
     
     fclose(read);
 }
@@ -89,7 +89,8 @@ void printPixelFrequency(int* freq,unsigned char (*data)[3], int size){
     printf("\nPixel Frequency Table:\n");
 	for(int i=0; i<size; i++){
 		if (freq[i] > 0){
-			printf("(%d, %d, %d) : %d\n", data[i][0], data[i][1],data[i][2], freq[i]);		
+			printf("(%d, %d, %d) : %d\n", data[i][0], data[i][1],data[i][2], freq[i]);	
+            	
 		}
     }
 }
