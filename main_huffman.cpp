@@ -3,62 +3,57 @@
 #include <stdio.h>
 
 int main() {
-    unsigned char header[15], resultHeader[15], *image;
-    int sumrgb;
-    HuffmanTreeNode* root = NULL;
-	readImage(header, image); 
-    
-	
-	int width, height, pos = 3;
-	width = getDimension(header, pos);
-	pos++;
-	height = getDimension(header, pos);
-	printf("\nWidth : %d, Height : %d\n", width, height);
-	unsigned char *resultImage = (unsigned char*) malloc(sizeof(unsigned char) * width*height*3);
-	int *freq = new int[width*height]{0};
-	
-    unsigned char (*data)[3] = (unsigned char (*)[3])calloc(width*height, sizeof(unsigned char[3]));
+    char filename[100];
+    int choice = 0;
+    while (choice != 3)
+    {
+        // Clear the console screen
+        printf("\033[2J\033[1;1H");
 
-    if (freq == NULL || data == NULL) {
-        printf("Failed to allocate memory\n");
-        return 1;
+        // Print the title
+        printf("  _  _       __  __                    ___         _     \n");
+        printf(" | || |_  _ / _|/ _|_ __  __ _ _ _    / __|___  __| |___ \n");
+        printf(" | __ | || |  _|  _| '  \\/ _` | ' \\  | (__/ _ \\/ _` / -_)\n");
+        printf(" |_||_|\\_,_|_| |_| |_|_|_\\__,_|_||_|  \\___\\___/\\__,_\\___|\n");
+
+        // Print the menu options
+        printf("\n\n");
+        printf("\t\t\t1. Encode\n");
+        printf("\t\t\t2. Decode\n");
+        printf("\t\t\t3. Quit\n");
+
+        // Wait for user input
+
+        printf("\n\t\t\tEnter your choice: ");
+        scanf("%d", &choice);
+
+        // Handle the user's choice
+        switch (choice)
+        {
+        case 1:
+            printf("\n\t\t\tWrite the file name : ");
+            scanf("%s", &filename);
+            printf("\t\t\tLoading...\n");
+            Encode(filename);
+            printf("\t\t\tEncode Finish, press any key to continue...");
+            break;
+        case 2:
+            printf("\n\t\t\tWrite the file name : ");
+            scanf("%s", &filename);
+            printf("\t\t\tLoading...\n");
+            Decode(filename);
+            printf("\t\t\tDecode Finish, press any key to continue...");
+            break;
+        case 3:
+            printf("\n\t\t\tPress any key to exit...");
+            break;
+        default:
+            printf("\n\t\t\tInvalid choice.\n");
+            break;
+        }
+        getchar();
+        getchar();
     }
-
-	countPixelFrequency(image, width, height, freq, data);
-
-	printPixelFrequency(freq, data, width*height);
-
-    HuffmanCodes(data, freq, width*height);
-
-    root = giveTree(data, freq, width*height, &sumrgb);
-    int arr[MAX_SIZE], top = 0;
-    printCodes(root, arr, top);
-    printTree(root, arr, top);
-
-    printf("Printing codes from tree\n");
-    //printf("%i %i %i", image[0], image[1], image[2]);
-
-    encodeHuffman(root, header, image, width*height*3);
-    decodeHuffman(resultImage, resultHeader, width*height*3);
-    
-    for (int i = width*height*3-9; i<width*height*3; i++){
-    	printf("image : %d\n", image[i]);
-    	printf("result : %d\n", resultImage[i]);
-//    	printf("header : %c\n", resultHeader[i]);
-	}
-    printf("header : %c%c", header[0], header[1]);
-    printf("header : %c%c", resultHeader[0], resultHeader[1]);
-
-    
-    FILE *write = fopen("result.ppm", "wb");
-    writePPM(write, resultHeader, resultImage, width*height*3);
-    
-	free(resultImage);
-	free(image);
-    free(freq);
-    free(data);
-
-    remove("code.txt");
     return 0;
 }
 

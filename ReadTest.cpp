@@ -24,11 +24,11 @@ void writePPM(FILE *file, unsigned char *header, unsigned char *image, int size)
     fwrite(image, size, 1, file);
 }
 
-void readImage(unsigned char header[], unsigned char* &image) // perubahan pada bagian parameter
+void readImage(unsigned char header[], unsigned char* &image, char filename[]) // perubahan pada bagian parameter
 {
 	FILE *read, *write1;
   	int i, j;
-	read = fopen("Test1.ppm", "rb"); /* b - binary mode */
+	read = fopen(filename, "rb"); /* b - binary mode */
 	
     readPPMHeader(read, header);
     if (header[0]!='P' || header[1]!='6'){

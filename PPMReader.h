@@ -20,7 +20,7 @@ int getDimension(unsigned char *header, int &pos);
 
 void writePPM(FILE *file, unsigned char *header, unsigned char *image, int size);
 
-void readImage(unsigned char header[], unsigned char * &image);
+void readImage(unsigned char header[], unsigned char * &image, char filename[]);
 
 //void countPixelFrequency(unsigned char* image, int width, int height, HuffmanNode* frequencyTable);
 void countPixelFrequency(unsigned char* image, int width, int height, int* freq,unsigned char (*data)[3]);
