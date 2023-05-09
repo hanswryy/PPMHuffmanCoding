@@ -45,7 +45,7 @@ HuffmanTreeNode *treeisBack(FILE *read);
 
 void decodeHuffman(unsigned char *image, unsigned char header[], int size);
 
-void readHeader(FILE *read, unsigned char *header);
+void readHeader(FILE *read, unsigned char header[]);
 
 void fixEncode(unsigned char* image, int size);
 

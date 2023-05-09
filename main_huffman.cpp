@@ -46,6 +46,9 @@ int main() {
     	printf("result : %d\n", resultImage[i]);
 //    	printf("header : %c\n", resultHeader[i]);
 	}
+    printf("header : %c%c", header[0], header[1]);
+    printf("header : %c%c", resultHeader[0], resultHeader[1]);
+
     
     FILE *write = fopen("result.ppm", "wb");
     writePPM(write, resultHeader, resultImage, width*height*3);

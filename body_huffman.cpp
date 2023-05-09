@@ -299,6 +299,7 @@ void decodeHuffman(unsigned char *image, unsigned char header[], int size)
 	printTree(root, arr, top);
 	ConvertHuffman(root, image, size);
 	readHeader(read, header);
+	printf("header : %c%c", header[0], header[1]);
 	fclose(read);
 	//read.close();
 //	ifstream input("Test1.txt", ios::binary);
@@ -344,9 +345,13 @@ HuffmanTreeNode *treeisBack(FILE *read)
 }
 
 // just read the header from txt
-void readHeader(FILE *read, unsigned char *header)
+void readHeader(FILE *read, unsigned char header[])
 {
-	int i = 0, j = 0;
+	while(fgetc(read)!='P'){
+		
+	}
+	header[0] = 'P';
+	int i = 1, j = 0;
 	char c;
 	while (j < 3)
 	{
