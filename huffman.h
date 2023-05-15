@@ -47,11 +47,13 @@ void decodeHuffman(unsigned char *image, unsigned char header[], int size, char 
 
 void readHeaderFromFile(FILE *read, unsigned char header[]);
 
-void writeEncoded(unsigned char* image, int size);
+void writeEncoded(unsigned char* image, int size, char filename[]);
 
 void ConvertCodetoData(HuffmanTreeNode* root, unsigned char *image, int size, char filename[]);
 
 void TraverseTree(HuffmanTreeNode** root, char c, unsigned char info[3]);
+
+void printTree(HuffmanTreeNode* root, int arr[], int top);
 
 void Encode(char filename[]);
 

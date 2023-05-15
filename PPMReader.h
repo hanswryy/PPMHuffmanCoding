@@ -24,5 +24,7 @@ void readImage(unsigned char header[], unsigned char * &image, char filename[]);
 
 void countPixelFrequency(unsigned char* image, int width, int height, int* freq,unsigned char (*data)[3]);
 
+void printPixelFrequency(int* freq,unsigned char (*data)[3], int size);
+
 #endif
 

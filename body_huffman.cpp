@@ -1,6 +1,7 @@
 // C++ Program for Huffman Coding
 // using Priority Queue
 #include "huffman.h"
+#include "PPMReader.h"
 
 // Function to generate Huffman
 // Encoding Tree
@@ -99,12 +100,12 @@ void writeCodetoFile(HuffmanTreeNode *root,
 }
 
 //this procedure is used to replace the rgb value with binary value from the tree
-void writeEncoded(unsigned char *image, int size)
+void writeEncoded(unsigned char *image, int size, char filename[])
 {
 	int k = 7;
 	bitset<8> writebit;
 	unsigned long n;
-	ofstream output("Test1.txt", ios::binary);
+	ofstream output(filename, ios::binary);
 	unsigned char data[3];
 	char code[100];
 	FILE *file = fopen("code.txt", "r");
@@ -193,7 +194,7 @@ void encodeHuffman(HuffmanTreeNode *root, unsigned char header[], unsigned char 
 	filename[lenFilename-1] = 't';
 
 	//this is used to encode the rgb value to binary value
-	writeEncoded(image, size);
+	writeEncoded(image, size, filename);
 
 	FILE *write;
 	int i = 0, j = 0, k = 0;
@@ -244,7 +245,6 @@ void decodeHuffman(unsigned char *image, unsigned char header[], int size, char 
 		printf("File tidak ditemukan\n");
 	}
 	HuffmanTreeNode *root = rebuildTree(read);//get the tree from the file txt
-	int arr[MAX_SIZE], top = 0;
 	readHeaderFromFile(read, header);//read the header from the file txt
 	int width, height, pos = 3;
 	width = getDimension(header, pos);
@@ -281,6 +281,31 @@ HuffmanTreeNode *rebuildTree(FILE *read)
 	return 0;
 }
 
+void printTree(HuffmanTreeNode *root,
+			   int arr[], int top)
+{
+	if (root->left)
+	{
+		arr[top] = 0;
+		printTree(root->left,
+				  arr, top + 1);
+	}
+	if (root->right)
+	{
+		arr[top] = 1;
+		printTree(root->right, arr, top + 1);
+	}
+	if (!root->left && !root->right)
+	{
+		printf("(%hhu, %hhu, %hhu)", root->data[0], root->data[1], root->data[2]);
+		for (int i = 0; i < top; i++)
+		{
+			cout << arr[i];
+		}
+		cout << endl;
+	}
+}
+
 // just read the header from txt
 void readHeaderFromFile(FILE *read, unsigned char header[])
 {
@@ -311,15 +336,18 @@ void ConvertCodetoData(HuffmanTreeNode *root, unsigned char *image, int size, ch
 	int j = 0;
 	unsigned char info[3];
 	HuffmanTreeNode *temp;
-	temp = root;
+	temp = root;	
 	while (input.read(reinterpret_cast<char *>(&byte), sizeof(byte)))
 	{
+		
 		readbit = byte;
 		for (int k = 0; k < 8; k++)
 		{
 			TraverseTree(&temp, readbit.to_string()[k], info);
-			if (info[0] != 0 && info[1] != 0 && info[2] != 0)
-			{
+			// print info
+			if(temp->left != NULL && temp->right != NULL) {
+				continue;
+			} else {
 				for (int i = 0; i < 3; i++)
 				{
 					if (j < size)
@@ -342,16 +370,10 @@ void TraverseTree(HuffmanTreeNode **root, char c, unsigned char info[3])
 	if (c == '0')
 	{
 		*root = (*root)->left;
-		info[0] = 0;
-		info[1] = 0;
-		info[2] = 0;
 	}
 	else if (c == '1')
 	{
 		*root = (*root)->right;
-		info[0] = 0;
-		info[1] = 0;
-		info[2] = 0;
 	}
 
 	if (!(*root)->left && !(*root)->right)
@@ -359,6 +381,7 @@ void TraverseTree(HuffmanTreeNode **root, char c, unsigned char info[3])
 		info[0] = (*root)->data[0];
 		info[1] = (*root)->data[1];
 		info[2] = (*root)->data[2];
+
 	}
 }
 
@@ -375,7 +398,8 @@ void Encode(char filename[])
 	pos++;
 	height = getDimension(header, pos);
 	unsigned char *resultImage = (unsigned char *)malloc(sizeof(unsigned char) * width * height * 3);
-	int *freq = new int[width * height]{0};
+	int *freq = new int[width * height];
+	memset(freq, 0, sizeof(*freq) * width * height);
 	unsigned char(*data)[3] = (unsigned char(*)[3])calloc(width * height, sizeof(unsigned char[3]));
 	if (freq == NULL || data == NULL)
 	{
@@ -384,6 +408,7 @@ void Encode(char filename[])
 	else
 	{
 		countPixelFrequency(image, width, height, freq, data);
+		printPixelFrequency(freq, data, width * height);
 		root = buildHuffmanTree(data, freq, width * height, &sumrgb);
 		int arr[MAX_SIZE], top = 0;
 		writeCodetoFile(root, arr, top);
@@ -407,4 +432,5 @@ void Decode(char filename1[])
 	decodeHuffman(resultImage, resultHeader, width * height * 3, filename1);
 	FILE *write = fopen("finishresult.ppm", "wb");
 	writePPM(write, resultHeader, resultImage, width * height * 3);
+	fclose(write);
 }

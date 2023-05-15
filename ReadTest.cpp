@@ -85,3 +85,14 @@ void countPixelFrequency(unsigned char* image, int width, int height, int* freq,
 	}
 	delete[] visited;
 }
+
+// function to print pixel frequency table
+void printPixelFrequency(int* freq,unsigned char (*data)[3], int size){
+    printf("\nPixel Frequency Table:\n");
+	for(int i=0; i<size; i++){
+		if (freq[i] > 0){
+			printf("(%d, %d, %d) : %d\n", data[i][0], data[i][1],data[i][2], freq[i]);	
+            	
+		}
+    }
+}
