@@ -16,6 +16,13 @@ int main()
         printf(" | || |_  _ / _|/ _|_ __  __ _ _ _    / __|___  __| |___ \n");
         printf(" | __ | || |  _|  _| '  \\/ _` | ' \\  | (__/ _ \\/ _` / -_)\n");
         printf(" |_||_|\\_,_|_| |_| |_|_|_\\__,_|_||_|  \\___\\___/\\__,_\\___|\n");
+        printf("\n");
+        printf("Kompresi File Gambar Berformat PPM dengan Metode Huffman Coding\n");
+        printf("\t\tPPM to TXT & TXT to PPM\n");
+        printf("Oleh : ");
+        printf("Farhan Muhammad Luthfi, ");
+        printf("Faris Abulkhoir, ");
+        printf("Mahardika Pratama");
 
         // Print the menu options
         printf("\n\n");

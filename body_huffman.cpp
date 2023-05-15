@@ -62,7 +62,7 @@ HuffmanTreeNode *generateTree(priority_queue<HuffmanTreeNode *,
 
 // It uses file to store the codes
 void writeCodetoFile(HuffmanTreeNode *root,
-				int arr[], int top)
+					 int arr[], int top)
 {
 	// Assign 0 to the left node
 	// and recur
@@ -70,7 +70,7 @@ void writeCodetoFile(HuffmanTreeNode *root,
 	{
 		arr[top] = 0;
 		writeCodetoFile(root->left,
-				   arr, top + 1);
+						arr, top + 1);
 	}
 
 	// Assign 1 to the right
@@ -99,7 +99,7 @@ void writeCodetoFile(HuffmanTreeNode *root,
 	}
 }
 
-//this procedure is used to replace the rgb value with binary value from the tree
+// this procedure is used to replace the rgb value with binary value from the tree
 void writeEncoded(unsigned char *image, int size, char filename[])
 {
 	int k = 7;
@@ -109,17 +109,17 @@ void writeEncoded(unsigned char *image, int size, char filename[])
 	unsigned char data[3];
 	char code[100];
 	FILE *file = fopen("code.txt", "r");
-	//this looping through the elemen of rgb array
+	// this looping through the elemen of rgb array
 	for (int i = 0; i < size; i += 3)
 	{
-		//this looping is used to find the binary value of the rgb value
+		// this looping is used to find the binary value of the rgb value
 		while (!feof(file))
 		{
 			fscanf(file, "%hhu %hhu %hhu ", &data[0], &data[1], &data[2]);
 			fscanf(file, "%s", code);
 			if (data[0] == image[i] && data[1] == image[i + 1] && data[2] == image[i + 2])
 			{
-				//this looping is used to write the binary value to the file
+				// this looping is used to write the binary value to the file
 				for (int j = 0; j < strlen(code); j++)
 				{
 					if (code[j] == '0')
@@ -131,7 +131,7 @@ void writeEncoded(unsigned char *image, int size, char filename[])
 						writebit.set(k, 1);
 					}
 					k--;
-					//if the bitset is full then it will write the bitset to the file
+					// if the bitset is full then it will write the bitset to the file
 					if (k == -1)
 					{
 						n = writebit.to_ulong();
@@ -143,21 +143,21 @@ void writeEncoded(unsigned char *image, int size, char filename[])
 				break;
 			}
 		}
-		//this is used to reset the file pointer to the start of the file
+		// this is used to reset the file pointer to the start of the file
 		fseek(file, 0, SEEK_SET);
 	}
-	//this is used to write the last bitset to the file when the bitset is not full
+	// this is used to write the last bitset to the file when the bitset is not full
 	n = writebit.to_ulong();
 	output.write(reinterpret_cast<const char *>(&n), sizeof(n));
 	output.close();
 	fclose(file);
-	//this is used to delete the code.txt file so no one can see the code
+	// this is used to delete the code.txt file so no one can see the code
 	remove("code.txt");
 }
 
-//this function is used to get the huffman tree from the rgb value
+// this function is used to get the huffman tree from the rgb value
 HuffmanTreeNode *buildHuffmanTree(unsigned char (*data)[3],
-						  int freq[], int size, int *arrsize)
+								  int freq[], int size, int *arrsize)
 {
 
 	// Declaring priority queue
@@ -184,16 +184,10 @@ HuffmanTreeNode *buildHuffmanTree(unsigned char (*data)[3],
 	return generateTree(pq);
 }
 
-//this procedure is used to encode the image.ppm to the file txt
+// this procedure is used to encode the image.ppm to the file txt
 void encodeHuffman(HuffmanTreeNode *root, unsigned char header[], unsigned char *image, int size, char filename[])
 {
-	//change the filename to .txt
-	int lenFilename = strlen(filename);
-	filename[lenFilename-3] = 't';
-	filename[lenFilename-2] = 'x';
-	filename[lenFilename-1] = 't';
-
-	//this is used to encode the rgb value to binary value
+	// this is used to encode the rgb value to binary value
 	writeEncoded(image, size, filename);
 
 	FILE *write;
@@ -218,9 +212,9 @@ void encodeHuffman(HuffmanTreeNode *root, unsigned char header[], unsigned char 
 	fclose(write);
 }
 
-//this procedure is used to write the tree to the file
-//if the node is leaf then it will write 1 and the rgb value
-//if the node is not leaf then it will write 0 and go to the left and right node
+// this procedure is used to write the tree to the file
+// if the node is leaf then it will write 1 and the rgb value
+// if the node is not leaf then it will write 0 and go to the left and right node
 void encodeTree(HuffmanTreeNode *node, FILE *file)
 {
 	if (!node->left && !node->right)
@@ -236,7 +230,7 @@ void encodeTree(HuffmanTreeNode *node, FILE *file)
 	}
 }
 
-//this procedure is used to decode the file txt to the image.ppm
+// this procedure is used to decode the file txt to the image.ppm
 void decodeHuffman(unsigned char *image, unsigned char header[], int size, char filename[])
 {
 	FILE *read = fopen(filename, "r");
@@ -244,13 +238,13 @@ void decodeHuffman(unsigned char *image, unsigned char header[], int size, char 
 	{
 		printf("File tidak ditemukan\n");
 	}
-	HuffmanTreeNode *root = rebuildTree(read);//get the tree from the file txt
-	readHeaderFromFile(read, header);//read the header from the file txt
+	HuffmanTreeNode *root = rebuildTree(read); // get the tree from the file txt
+	readHeaderFromFile(read, header);		   // read the header from the file txt
 	int width, height, pos = 3;
 	width = getDimension(header, pos);
 	pos++;
 	height = getDimension(header, pos);
-	ConvertCodetoData(root, image, size, filename);//decode the file txt to the image.ppm
+	ConvertCodetoData(root, image, size, filename); // decode the file txt to the image.ppm
 	fclose(read);
 }
 
@@ -327,7 +321,7 @@ void readHeaderFromFile(FILE *read, unsigned char header[])
 	}
 }
 
-//convert the binary value from txt file to rgb value
+// convert the binary value from txt file to rgb value
 void ConvertCodetoData(HuffmanTreeNode *root, unsigned char *image, int size, char filename[])
 {
 	ifstream input(filename, ios::binary);
@@ -336,18 +330,21 @@ void ConvertCodetoData(HuffmanTreeNode *root, unsigned char *image, int size, ch
 	int j = 0;
 	unsigned char info[3];
 	HuffmanTreeNode *temp;
-	temp = root;	
+	temp = root;
 	while (input.read(reinterpret_cast<char *>(&byte), sizeof(byte)))
 	{
-		
+
 		readbit = byte;
 		for (int k = 0; k < 8; k++)
 		{
 			TraverseTree(&temp, readbit.to_string()[k], info);
 			// print info
-			if(temp->left != NULL && temp->right != NULL) {
+			if (temp->left != NULL && temp->right != NULL)
+			{
 				continue;
-			} else {
+			}
+			else
+			{
 				for (int i = 0; i < 3; i++)
 				{
 					if (j < size)
@@ -364,7 +361,7 @@ void ConvertCodetoData(HuffmanTreeNode *root, unsigned char *image, int size, ch
 	input.close();
 }
 
-//this procedure is used to traverse the tree to get the rgb value
+// this procedure is used to traverse the tree to get the rgb value
 void TraverseTree(HuffmanTreeNode **root, char c, unsigned char info[3])
 {
 	if (c == '0')
@@ -381,17 +378,23 @@ void TraverseTree(HuffmanTreeNode **root, char c, unsigned char info[3])
 		info[0] = (*root)->data[0];
 		info[1] = (*root)->data[1];
 		info[2] = (*root)->data[2];
-
 	}
 }
 
-//this procedure is used to encode the image.ppm to the file txt
-//this procedure is all of flow oh the huffman encoding
+// this procedure is used to encode the image.ppm to the file txt
+// this procedure is all of flow oh the huffman encoding
 void Encode(char filename[])
 {
-	unsigned char header[15], resultHeader[15], *image;
+	FILE *f;
+	unsigned char header[15], *image;
 	int sumrgb;
 	HuffmanTreeNode *root = NULL;
+	f = fopen(filename, "r");
+	fseek(f, 0, SEEK_END);
+	long fsize1 = ftell(f);
+	printf("\t\t\tNama file awal : %s\n", filename);
+	printf("\t\t\tUkuran file awal : %ld bytes\n", fsize1);
+	fclose(f);
 	readImage(header, image, filename);
 	int width, height, pos = 3;
 	width = getDimension(header, pos);
@@ -408,18 +411,35 @@ void Encode(char filename[])
 	else
 	{
 		countPixelFrequency(image, width, height, freq, data);
-		printPixelFrequency(freq, data, width * height);
 		root = buildHuffmanTree(data, freq, width * height, &sumrgb);
 		int arr[MAX_SIZE], top = 0;
 		writeCodetoFile(root, arr, top);
+		int lenFilename = strlen(filename);
+		filename[lenFilename - 3] = 't';
+		filename[lenFilename - 2] = 'x';
+		filename[lenFilename - 1] = 't';
 		encodeHuffman(root, header, image, width * height * 3, filename);
+		f = fopen(filename, "r");
+		fseek(f, 0, SEEK_END);
+		long fsize2 = ftell(f);
+		printf("\t\t\tNama file akhir : %s\n", filename);
+		printf("\t\t\tUkuran file akhir : %ld bytes\n", fsize2);
+		fclose(f);
+		printf("\t\t\tPersentase pengurangan size : %f%\n", ((float)fsize2 / fsize1) * 100);
 	}
 }
 
-//this procedure is used to decode the file txt to the image.ppm
-//this procedure is all of flow of the decoding process
+// this procedure is used to decode the file txt to the image.ppm
+// this procedure is all of flow of the decoding process
 void Decode(char filename1[])
 {
+	FILE *f;
+	f = fopen(filename1, "r");
+	fseek(f, 0, SEEK_END);
+	long fsize1 = ftell(f);
+	printf("\t\t\tNama file awal : %s\n", filename1);
+	printf("\t\t\tUkuran file awal : %ld bytes\n", fsize1);
+	fclose(f);
 	FILE *read = fopen(filename1, "r");
 	unsigned char resultHeader[15];
 	readHeaderFromFile(read, resultHeader);
@@ -433,4 +453,11 @@ void Decode(char filename1[])
 	FILE *write = fopen("finishresult.ppm", "wb");
 	writePPM(write, resultHeader, resultImage, width * height * 3);
 	fclose(write);
+	f = fopen("finishresult.ppm", "r");
+	fseek(f, 0, SEEK_END);
+	long fsize2 = ftell(f);
+	printf("\t\t\tNama file akhir : finishresult.ppm\n");
+	printf("\t\t\tUkuran file akhir : %ld bytes\n", fsize2);
+	fclose(f);
+	printf("\t\t\tPersentase penambahan size : %f%\n", ((float)fsize2 / fsize1) * 100);
 }
