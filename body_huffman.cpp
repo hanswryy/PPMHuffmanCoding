@@ -392,8 +392,8 @@ void Encode(char filename[])
 	f = fopen(filename, "r");
 	fseek(f, 0, SEEK_END);
 	long fsize1 = ftell(f);
-	printf("\t\t\tNama file awal : %s\n", filename);
-	printf("\t\t\tUkuran file awal : %ld bytes\n", fsize1);
+	printf("\t\t\tNama file original : %s\n", filename);
+	printf("\t\t\tUkuran file original : %ld bytes\n", fsize1);
 	fclose(f);
 	readImage(header, image, filename);
 	int width, height, pos = 3;
@@ -422,10 +422,10 @@ void Encode(char filename[])
 		f = fopen(filename, "r");
 		fseek(f, 0, SEEK_END);
 		long fsize2 = ftell(f);
-		printf("\t\t\tNama file akhir : %s\n", filename);
-		printf("\t\t\tUkuran file akhir : %ld bytes\n", fsize2);
+		printf("\t\t\tNama file kompresi : %s\n", filename);
+		printf("\t\t\tUkuran file kompresi : %ld bytes\n", fsize2);
 		fclose(f);
-		printf("\t\t\tPersentase pengurangan size : %f%\n", ((float)fsize2 / fsize1) * 100);
+		printf("\t\t\tPersentase pengurangan size : %f persen\n", ((float)fsize2 / fsize1) * 100);
 	}
 }
 
@@ -437,8 +437,8 @@ void Decode(char filename1[])
 	f = fopen(filename1, "r");
 	fseek(f, 0, SEEK_END);
 	long fsize1 = ftell(f);
-	printf("\t\t\tNama file awal : %s\n", filename1);
-	printf("\t\t\tUkuran file awal : %ld bytes\n", fsize1);
+	printf("\t\t\tNama file original : %s\n", filename1);
+	printf("\t\t\tUkuran file original : %ld bytes\n", fsize1);
 	fclose(f);
 	FILE *read = fopen(filename1, "r");
 	unsigned char resultHeader[15];
@@ -456,8 +456,8 @@ void Decode(char filename1[])
 	f = fopen("finishresult.ppm", "r");
 	fseek(f, 0, SEEK_END);
 	long fsize2 = ftell(f);
-	printf("\t\t\tNama file akhir : finishresult.ppm\n");
-	printf("\t\t\tUkuran file akhir : %ld bytes\n", fsize2);
+	printf("\t\t\tNama file dekompresi : finishresult.ppm\n");
+	printf("\t\t\tUkuran file dekompresi : %ld bytes\n", fsize2);
 	fclose(f);
-	printf("\t\t\tPersentase penambahan size : %f%\n", ((float)fsize2 / fsize1) * 100);
+	printf("\t\t\tPersentase penambahan size : %f persen\n", ((float)fsize2 / fsize1) * 100);
 }

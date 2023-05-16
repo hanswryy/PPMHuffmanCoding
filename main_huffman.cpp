@@ -19,10 +19,10 @@ int main()
         printf("\n");
         printf("Kompresi File Gambar Berformat PPM dengan Metode Huffman Coding\n");
         printf("\t\tPPM to TXT & TXT to PPM\n");
-        printf("Oleh : ");
-        printf("Farhan Muhammad Luthfi, ");
-        printf("Faris Abulkhoir, ");
-        printf("Mahardika Pratama");
+        printf("Oleh : Farhan Muhammad Luthfi, Faris Abulkhoir, Mahardika Pratama");
+        printf("\n\tJurusan Teknik Komputer dan Informatika\n");
+        printf("\t\tPoliteknik Negeri Bandung\n");
+        printf("\t\t\tAngkatan 22\n");
 
         // Print the menu options
         printf("\n\n");
