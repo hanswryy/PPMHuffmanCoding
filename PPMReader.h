@@ -1,16 +1,17 @@
-/*	Program		: body_PPMReader.cpp
-	Deskripsi	: Header untuk ADT PPMReader
-	Dibuat oleh :
-                - Farhan Muhammad Lutfhi 	(221524039) 
-                - Faris Abulkhoir 		    (221524040) 
-                - Mahardika Pratama 		(221524044)
-    Kelompok	: A1
-	Kelas		: 1B
-    Jurusan     : Teknik Komputer dan Informatika
-    Prodi       : D4 Teknik Informatika
-    Angkatan    : 2022/2023
-	Tanggal		: 15 Mei 2023
-	===============================================*/
+/*	
+Program		: body_PPMReader.cpp
+Deskripsi	: Header untuk ADT PPMReader
+Dibuat oleh :
+            - Farhan Muhammad Lutfhi 	(221524039) 
+            - Faris Abulkhoir 		    (221524040) 
+            - Mahardika Pratama 		(221524044)
+Kelompok	: A1
+Kelas		: 1B
+Jurusan     : Teknik Komputer dan Informatika
+Prodi       : D4 Teknik Informatika
+Angkatan    : 2022/2023
+Tanggal		: 15 Mei 2023
+===============================================*/
 
 #ifndef PPMReader_h
 #define PPMReader_h
