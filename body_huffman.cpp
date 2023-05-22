@@ -434,7 +434,7 @@ F.S. : The compressed file is decoded, and the original ppm image is reconstruct
 	printf("\t\t\tUkuran file dekompresi : %ld bytes\n", fsize2);
 	// Close the decoded file
 	fclose(f);
-	printf("\t\t\tPersentase penambahan size : %.2f persen\n", ((float)fsize1 / fsize2) * 100);
+	printf("\t\t\tPersentase penambahan size : %.2f persen\n", ((float)(fsize2-fsize1) / fsize2) * 100);
 }
 
 
