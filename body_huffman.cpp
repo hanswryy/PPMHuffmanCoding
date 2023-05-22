@@ -39,15 +39,14 @@ F.S. : ppm image file has been successfully compressed and the compressed result
 	long fsize1, fsize2;
 	// Allocate memory for the resulting compressed image
 	unsigned char *resultImage = (unsigned char *)malloc(sizeof(unsigned char) * width * height * 3);
-	// Dynamically allocate memory for the frequency of each pixel value
-	int *freq = new int[width * height];
+	int *freq;
 	// Allocate memory for pixel data in 2D array format
 	unsigned char(*data)[3] = (unsigned char(*)[3])calloc(width * height, sizeof(unsigned char[3]));
     
 
 	/*Algorithm*/
 	// Open the image file in read mode
-	f = fopen(filename, "r");
+	f = fopen(filename, "rb");
 	// Move the file pointer to the end of the file
 	fseek(f, 0, SEEK_END);
 	// Get the file size of the original image
@@ -65,7 +64,8 @@ F.S. : ppm image file has been successfully compressed and the compressed result
 	pos++;
 	// Get the height of the image from the header
 	height = getDimension(header, pos);
-	
+	// Dynamically allocate memory for the frequency of each pixel value
+	freq = new int[width * height];
 	// Initialize the frequency array with zeros
 	memset(freq, 0, sizeof(*freq) * width * height);
 	
@@ -99,7 +99,7 @@ F.S. : ppm image file has been successfully compressed and the compressed result
 		printf("\t\t\tUkuran file kompresi : %ld bytes\n", fsize2);
 		// Close the file
 		fclose(f);
-		printf("\t\t\tPersentase pengurangan size : %f persen\n", ((float)fsize2 / fsize1) * 100);
+		printf("\t\t\tPersentase pengurangan size : %.2f persen\n", ((float)(fsize1-fsize2) / fsize1) * 100);
 	}
 }
 
@@ -374,6 +374,7 @@ F.S. : The encoded image data is written to a file.
 }
 
 
+
 void Decode(char filename1[])
 /*
 Description : This Procedure decodes the compressed image file and restores it to its original ppm format.
@@ -386,17 +387,17 @@ F.S. : The compressed file is decoded, and the original ppm image is reconstruct
 	long fsize1, fsize2;
 	unsigned char resultHeader[15];
 	int width, height, pos;
-    unsigned char *resultImage = (unsigned char *)malloc(sizeof(unsigned char) * width * height * 3);
+    unsigned char *resultImage;
 	/*Algorithm*/
-
+	
 	// Open the input file in read mode
 	f = fopen(filename1, "r");
 	// Move the file pointer to the end of the file
 	fseek(f, 0, SEEK_END);
 	// Get the file size
 	fsize1 = ftell(f);
-	printf("\t\t\tNama file original : %s\n", filename1);
-	printf("\t\t\tUkuran file original : %ld bytes\n", fsize1);
+	printf("\t\t\tNama file Kompresi : %s\n", filename1);
+	printf("\t\t\tUkuran file Kompresi : %ld bytes\n", fsize1);
 	// Close the input file
 	fclose(f);
 	
@@ -414,6 +415,7 @@ F.S. : The compressed file is decoded, and the original ppm image is reconstruct
 	// Close the file after reading the header
 	fclose(read);
 	
+	resultImage = (unsigned char *)malloc(sizeof(unsigned char) * width * height * 3);
 	// Decode the Huffman-encoded image
 	decodeHuffman(resultImage, resultHeader, width * height * 3, filename1);
 	// Open a new file to write the decoded image
@@ -423,7 +425,7 @@ F.S. : The compressed file is decoded, and the original ppm image is reconstruct
 	// Close the output file
 	fclose(write);
 	// Open the decoded file to get its size
-	f = fopen("finishresult.ppm", "r");
+	f = fopen("finishresult.ppm", "rb");
 	// Move the file pointer to the end of the file
 	fseek(f, 0, SEEK_END);
 	// Get the file size
@@ -432,7 +434,7 @@ F.S. : The compressed file is decoded, and the original ppm image is reconstruct
 	printf("\t\t\tUkuran file dekompresi : %ld bytes\n", fsize2);
 	// Close the decoded file
 	fclose(f);
-	printf("\t\t\tPersentase penambahan size : %f persen\n", ((float)fsize2 / fsize1) * 100);
+	printf("\t\t\tPersentase penambahan size : %.2f persen\n", ((float)fsize1 / fsize2) * 100);
 }
 
 
@@ -444,18 +446,16 @@ F.S. : The encoded image data is decoded using the Huffman tree, and the decoded
 */
 {
 	/*Data Dictionary*/
-    FILE *read;
-	HuffmanTreeNode *root;
 	int width, height, pos;
     /*Algorithm*/
 	// Open the input file in read mode
-	read = fopen(filename, "r");
+	FILE *read = fopen(filename, "r");
 	if (read == NULL)
 	{
 		printf("File tidak ditemukan\n");
 	}
 	// Rebuild the Huffman tree from the file
-	root = rebuildTree(read); // get the tree from the file txt
+	HuffmanTreeNode *root = rebuildTree(read); // get the tree from the file txt
 	// Read the header from the file
 	readHeaderFromFile(read, header);		   // read the header from the file txt
 	pos = 3;
@@ -482,7 +482,6 @@ F.S. : The Huffman tree is reconstructed from the encoded file.
     char c;
 	unsigned char data[3];
 	HuffmanTreeNode *left, *right, *root;
-	unsigned char empty[3] = {0, 0, 0};
     /*Algorithm*/
 	
 	// Stop when it reads a newline character
@@ -500,9 +499,8 @@ F.S. : The Huffman tree is reconstructed from the encoded file.
 			// Recursively rebuild the left and right subtrees
 			left = rebuildTree(read);
 			right = rebuildTree(read);
-			// Create a new internal node with empty data values
+			unsigned char empty[3] = {0, 0, 0};
 			root = new HuffmanTreeNode(empty, 0);
-			// Assign the left and right subtrees to the internal node
 			root->left = left;
 			root->right = right;
 			return root;
@@ -593,6 +591,7 @@ F.S. : The encoded data is converted back to the original pixel values using the
 				// Reset the current node to the root for the next bit
 				temp = root;
 			}
+			
 		}
 	}
 	// Close the input file
@@ -601,7 +600,7 @@ F.S. : The encoded data is converted back to the original pixel values using the
 
 
 void TraverseTree(HuffmanTreeNode **root, char c, unsigned char info[3])
-/*
+/*	
 Description : This Procedure traverses the Huffman tree to find the pixel value corresponding to a specific code.
 I.S. : The Huffman tree, character code, and information array are available.
 F.S. : The Huffman tree is traversed to find the corresponding pixel value, and store them in the info array.
@@ -624,5 +623,5 @@ F.S. : The Huffman tree is traversed to find the corresponding pixel value, and 
 		info[1] = (*root)->data[1];
 		info[2] = (*root)->data[2];
 	}
-}
 
+}

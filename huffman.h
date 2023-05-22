@@ -129,4 +129,5 @@ Description : This Procedure traverses the Huffman tree to find the pixel value 
 I.S. : The Huffman tree, character code, and information array are available.
 F.S. : The Huffman tree is traversed to find the corresponding pixel value, and store them in the info array.
 */
+
 #endif

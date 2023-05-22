@@ -16,6 +16,7 @@ Tanggal		: 15 Mei 2023
 #include "PPMReader.h"
 #include "huffman.h"
 #include <stdio.h>
+#include <windows.h>
 
 int main()
 {
@@ -24,8 +25,8 @@ int main()
     while (choice != 3)
     {
         // Clear the console screen
-        printf("\033[2J\033[1;1H");
-
+//        printf("\033[2J\033[1;1H");
+		system("cls");
         // Print the title
         printf("  _  _       __  __                    ___         _     \n");
         printf(" | || |_  _ / _|/ _|_ __  __ _ _ _    / __|___  __| |___ \n");

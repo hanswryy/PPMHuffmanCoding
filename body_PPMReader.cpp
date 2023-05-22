@@ -140,12 +140,12 @@ Reference : https://www.geeksforgeeks.org/counting-frequencies-of-array-elements
 {
     /*Data Dictionary*/
     int size, count, j, index;
-    bool* visited = new bool[size];
+    bool* visited;
     /*Algorithm*/
 
     //size stores the total number of pixels in the image (width * height * 3).
     size = width * height * 3;
-
+	visited = new bool[size];
     //All elements in the visited array are set to false.
 	for (int i = 0; i < size; i++) {
 		visited[i] = false;
